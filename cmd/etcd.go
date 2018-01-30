@@ -16,11 +16,8 @@ package cmd
 
 import (
 	"fmt"
-	"os"
 
-	etcd "github.com/itc3-devops/etcd-tools"
 	"github.com/spf13/cobra"
-	"github.com/spf13/viper"
 )
 
 // etcdCmd represents the etcd command
@@ -53,7 +50,8 @@ func init() {
 }
 
 func EtcdLeaseTest() {
-	fmt.Println("Print ETCD Endpoints: ", viper.GetString("ETCDCTL_ENDPOINTS"))
-	etcd.EtcdPutLeaseForever(os.Args[2], os.Args[3])
+	// Start API server
+
+	fmt.Println("Running additional functions...")
 
 }
