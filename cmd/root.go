@@ -18,7 +18,6 @@ import (
 	"fmt"
 	"os"
 
-	etcd "github.com/itc3-devops/etcd-tools"
 	homedir "github.com/mitchellh/go-homedir"
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
@@ -84,9 +83,33 @@ func initConfig() {
 	if err := viper.ReadInConfig(); err == nil {
 		fmt.Println("Using config file:", viper.ConfigFileUsed())
 	}
-	//go func() {
-	fmt.Println("Print ETCD Endpoints: ", viper.GetString("ETCDCTL_ENDPOINTS"))
-	etcd.EtcdPutLeaseForever(os.Args[2], os.Args[3])
-	//}()
+
+	// Check for existing environment vars for KMS, if not set from viper config file
+
+	KmsKeyArn = os.Getenv("AWS_KMS_KEY")
+	if KmsKeyArn == "" {
+		os.Setenv("AWS_KMS_KEY", viper.GetString("AWS.Kms.Key"))
+		KmsKeyArn = os.Getenv("AWS_KMS_KEY")
+	}
+
+	AwsKmsRegion = os.Getenv("AWS_REGION")
+	if AwsKmsRegion == "" {
+		os.Setenv("AWS_REGION", viper.GetString("AWS.Kms.Region"))
+		AwsKmsRegion = os.Getenv("AWS_REGION")
+
+	}
+
+	AwsKmsAccessKey = os.Getenv("AWS_ACCESS_KEY_ID")
+	if AwsKmsAccessKey == "" {
+		os.Setenv("AWS_ACCESS_KEY_ID", viper.GetString("AWS.Kms.AccessKey"))
+		AwsKmsAccessKey = os.Getenv("AWS_ACCESS_KEY_ID")
+	}
+
+	AwsKmsSecretKey = os.Getenv("AWS_SECRET_ACCESS_KEY")
+	if AwsKmsSecretKey == "" {
+		os.Setenv("AWS_SECRET_ACCESS_KEY", viper.GetString("AWS.Kms.SecretKey"))
+		AwsKmsSecretKey = os.Getenv("AWS_SECRET_ACCESS_KEY")
+	}
+	AwsS3Bucket = viper.GetString("AWS.Kms.Bucket")
 
 }
