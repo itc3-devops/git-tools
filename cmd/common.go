@@ -509,7 +509,6 @@ func GitGetFileContents(repoOwner string, repoName string, fileName string) {
 	contents, _ := configFile.GetContent()
 
 	fmt.Printf(contents) // Last commit information
-
 }
 
 func GitPutFileContents(repoOwner string, repoName string, filePathName string) error {
@@ -629,7 +628,7 @@ func GitUpdateEncryptedFileContents(repoOwner string, repoName string, filePathN
 		Message: &message,
 		Content: contents,
 		Branch:  &branch,
-		SHA:     github.String(sha),
+		SHA:     github.String(GitGetSha),
 	}
 
 	//returns meta-data of commit and wrapper obj of the github http repsonse
@@ -690,7 +689,7 @@ func GitExistEncryptedFile(repoOwner string, repoName string, filePathName strin
 }
 
 // helper function to get the MAINTAINER files SHA
-func getSha(client *github.Client, repoOwner string, repoName string, filePathName string) (string, error) {
+func GitGetSha(client *github.Client, repoOwner string, repoName string, filePathName string) (string, error) {
 	opt := new(github.RepositoryContentGetOptions)
 	context := context.Background()
 	res, _, _, err := client.Repositories.GetContents(context, repoOwner, repoName, filePathName, opt)
